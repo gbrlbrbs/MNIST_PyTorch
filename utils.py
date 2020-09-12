@@ -88,10 +88,6 @@ def train(train_loader, net, criterion, optimizer, print_every=1000):
         loss.backward()
         optimizer.step()
 
-        '''if i % print_every == print_every - 1:
-            split_loss = running_loss - split_loss
-            print(f'[{i+1}] split loss = {split_loss/print_every}')'''
-
     epoch_loss = running_loss / len(train_loader.dataset)
 
     return net, optimizer, epoch_loss
@@ -144,18 +140,6 @@ def training_loop(net, criterion, optimizer, train_loader, valid_loader, print_e
         valid_accuracy = get_accuracy(net, valid_loader)
         print(f'Validation loss: {valid_loss:.4f}')
         print(f'Validation accuracy: {100 * valid_accuracy:.2f}\n')
-
-        '''if epoch % print_every == (print_every - 1):
-
-            train_accuracy = get_accuracy(net, train_loader)
-            valid_accuracy = get_accuracy(net, valid_loader)
-
-            print(f'{datetime.now().time().replace(microsecond=0)} --- '
-                  f'Epoch: {epoch+1}\n'
-                  f'Train loss: {train_loss:.4f}\n'
-                  f'Valid loss: {valid_loss:.4f}\n'
-                  f'Train accuracy: {100 * train_accuracy:.2f}\n'
-                  f'Valid accuracy: {100 * valid_accuracy:.2f}')'''
 
     torch.save(net.state_dict(), SAVE_PATH)
             
