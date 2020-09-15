@@ -72,7 +72,6 @@ def plot_losses(train_losses, valid_losses):
 def train(train_loader, net, criterion, optimizer, print_every=1000):
     net.train()
     running_loss = 0.0
-    split_loss = running_loss
 
     for i, data in enumerate(train_loader, 0):
 
