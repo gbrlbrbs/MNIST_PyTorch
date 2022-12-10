@@ -1,7 +1,10 @@
 import torch
 import matplotlib.pyplot as plt
+import seaborn as sns
 import numpy as np
 import math
+import pandas as pd
+from sklearn.metrics import confusion_matrix
 from torch.utils.data import DataLoader
 from torchvision import transforms, datasets
 from datetime import datetime
@@ -200,3 +203,29 @@ def evaluate_pictures(dataset, net=None):
 
     figure.suptitle('LeNet 5 - Predictions')
     plt.savefig('predictions.png', format=FIG_FORMAT)
+
+
+def plot_confusion_matrix(valid_loader: DataLoader, net=None):
+    if net is None:
+        net = LeNet5(NUM_CLASSES).to(device)
+        net.load_state_dict(torch.load(SAVE_PATH))
+
+    figure = plt.figure(figsize=FIG_SIZE, dpi=400)
+    net.eval()
+
+    y_pred = []
+    y_true = []
+
+    for inputs, labels in valid_loader:
+        output, _ = net(inputs.to(device))
+        output = torch.max(torch.exp(output), 1)[1].data.cpu().numpy()
+        y_pred.extend(output)
+
+        lbls = labels.data.cpu().numpy()
+        y_true.extend(lbls)
+
+    classes = [i for i in range(10)]
+    cf = confusion_matrix(y_true, y_pred, labels=classes)
+
+    sns.heatmap(cf, annot=True)
+    plt.savefig('confusion_matrix.png')
